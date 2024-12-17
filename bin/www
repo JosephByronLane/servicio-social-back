@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('servicio-social-back:server');
 var http = require('http');
+const { sequelize, Service } = require('../models'); // Adjust the path if necessary
 
 /**
  * Get port from environment and store in Express.
@@ -21,13 +22,68 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
+//dtaanase connection and initialization script
+const initializeDatabaseAndStartServer = async () => {
+  try {
+    
+    //check if cooection to DB is ok, we aren't actually authenticating anything, its just an ACK
+    try {
+      await sequelize.authenticate();
+      console.log('Connection to the MariaDB database has been established successfully.');
+    } catch (error) {
+      console.error('Unable to connect to the database:', error);
+    }
+    // we sync (create) all needed database tables automatically (god bless automation)
+    await sequelize.sync({
+      // force: false
+     }); //to do hard reset and drop all tables set force to true
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+    console.log('All models were synchronized successfully.');
+
+    // initial services for service table, THIS IS NEEDED, WE NEED TO SEED THE DATABASE ELSE EVERYTHING BREAKS
+    const services = [
+      'water',
+      'electricity',
+      'internet',
+      'furnishings',
+      'parking',
+      'garbage collection',
+      'pet friendly',
+      'cleaning service',
+      'washing service',
+      'communal areas',
+      'food',
+    ];
+
+    //FIXME: this rawdogs and adds everything to the database wether its there or not, 
+    for (const serviceName of services) {
+      await Service.findOrCreate({
+        where: { name: serviceName },
+      });
+    }
+
+    console.log('Services have been seeded.');
+
+    //start the server
+
+    /**
+   * Listen on provided port, on all network interfaces.
+   */
+
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    process.exit(1); // Exit the process with failure
+  }
+};
+
+initializeDatabaseAndStartServer();
+
+
+
+
 
 /**
  * Normalize a port into a number, string, or false.
