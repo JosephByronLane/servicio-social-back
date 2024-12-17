@@ -13,7 +13,13 @@ const sequelize = new Sequelize(
     logging: config.logging,
   }
 );
-
+console.log(config.database);
+console.log(config.username);
+console.log(config.password);
+console.log(config.host);
+console.log(config.port);
+console.log(config.dialect);
+console.log(config.logging);
 
 //we apply said configuration to e ach model to bind them to the same sequelize instasnce
 //this keeps everything tidy and allows for easier associations between models, which are defined below.
