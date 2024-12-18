@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to start your Express.js app
-CMD ["pm2-runtime", "bin/www", "--no-daemon"]
+CMD ["pm2-dev", "ecosystem.config.js", "--no-daemon"]

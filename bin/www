@@ -22,7 +22,7 @@ app.set('port', port);
 
 var server = http.createServer(app);
 var sync = false; //set to true to sync the database
-//dtaanase connection and initialization script
+//database connection and initialization script
 const initializeDatabaseAndStartServer = async () => {
   try {
     
