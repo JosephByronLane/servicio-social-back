@@ -5,7 +5,8 @@
   "scripts": {
     "node": "pm2 start ./bin/www",
     "nodemon": "nodemon -L ./bin/www",
-    "pm2": "pm2 start ./bin/www"
+    "pm2": "pm2 start ./bin/www",
+    "pm2dev": "pm2-dev ecosystem.config.js --no-daemon"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

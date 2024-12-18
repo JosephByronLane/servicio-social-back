@@ -11,7 +11,7 @@ services:
       - .:/usr/src/app
 
     #start the express app with nodemon (dev)
-
+    command: npm run pm2dev
     #wait for mariadb to launch before starting the Express.js app
     depends_on:
       - mariadb

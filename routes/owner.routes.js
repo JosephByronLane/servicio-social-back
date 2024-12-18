@@ -1,26 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { createOwner, getOwners } = require("../controllers/owner.controller");
+const { createOwner, getOwners, getOwnerById, getOwnerByEmail, deleteOwner} = require("../controllers/owner.controller");
+const { validateOwner } = require('../validators/ownerValidator');
+const { validateId } = require('../validators/idValidator');
+const validateResult = require('../middleware/resultValidator');
+const { validateEmail } = require('../validators/emailValidator');
 
 
+router.post('/', validateOwner, validateResult ,createOwner);
+router.get('/', getOwners);
 
-router.post('/', async (req, res) => {
-    try {
-      const user = await createOwner(req, res);
-      res.status(201).json(user);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  });
-  
-router.get('/', async (req, res) => {
-try {
-    const users = await getOwners(req, res);
-    res.status(200).json(users);
-} catch (error) {
-    res.status(500).json({ error: error.message });
-}
-});
+router.get('/:id', validateId, validateResult , getOwnerById);
+router.get('/email/:email', validateEmail, validateResult ,getOwnerByEmail);
 
+router.delete('/:id', validateId,validateResult , deleteOwner);
 
 module.exports = router;
