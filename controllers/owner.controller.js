@@ -2,6 +2,10 @@ const { Owner } = require('../models');
 
 const createOwner = async (req, res) => {
   try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Please provide owner details' });
+    }
+
     const { firstName, lastName, email, telephone } = req.body;
 
     if (firstName=null){
@@ -35,7 +39,6 @@ const getOwners = async (req, res) => {
   }
 };
 
-// Additional CRUD operations (updateOwner, deleteOwner) can be added similarly.
 
 module.exports = {
   createOwner,
