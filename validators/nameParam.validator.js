@@ -1,6 +1,6 @@
 const { param } = require("express-validator");
 const { Service } = require("../models");
-const { checkUniqueField } = require("../middleware/checkUniqueField");
+const { checkUniqueField } = require("../middleware/checkUniqueField.middleware");
 
 const validateNameParam = [
   param('name')

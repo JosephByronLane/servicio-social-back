@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const { checkUniqueField } = require('../middleware/checkUniqueField');
+const { checkUniqueField } = require('../middleware/checkUniqueField.middleware');
 const { Service } = require('../models');
 
 //TODO: If  its only used in the Service model, rename it to validateService

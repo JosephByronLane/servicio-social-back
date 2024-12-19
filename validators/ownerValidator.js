@@ -1,5 +1,5 @@
 const { body } = require('express-validator');
-const { checkUniqueField } = require("../middleware/checkUniqueField");
+const { checkUniqueField } = require("../middleware/checkUniqueField.middleware");
 const { Owner } = require('../models');
 
 const validateOwner  = (prefix = '') => [
@@ -8,7 +8,7 @@ const validateOwner  = (prefix = '') => [
     .withMessage('First name is required')
     .trim()
     .escape(),
-    
+
     body(`${prefix}lastName`)
     .notEmpty()
     .withMessage('Last name is required')
