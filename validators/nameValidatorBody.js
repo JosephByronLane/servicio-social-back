@@ -1,6 +1,6 @@
 const { body } = require('express-validator');
 
-const validateService = [
+const validateNameeBody = [
   body('name')
     .notEmpty().withMessage('Service name is required')
     .bail() //this stops it from running the next validation if this one fails
@@ -10,5 +10,5 @@ const validateService = [
 ];
 
 module.exports = {
-    validateService,
+  validateNameeBody,
 };

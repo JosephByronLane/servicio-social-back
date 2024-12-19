@@ -1,21 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { createOwner, getOwners, getOwnerById, getOwnerByEmail, deleteOwner} = require("../controllers/owner.controller");
 const { validateId } = require('../validators/idValidator');
 const validateResult = require('../middleware/resultValidator');
-const { validateEmail } = require('../validators/emailValidator');
-const { validateService } = require('../validators/serviceValodator');
+const { validateNameeBody } = require('../validators/nameValidatorBody');
 const checkUniqueField = require('../middleware/checkUniqueField');
 const { Service } = require('../models');
-const { createService } = require('../controllers/service.controller');
+const { createService, getServices, getServiceById, getServiceByName, deleteServiceById, deleteServiceByName } = require('../controllers/service.controller');
+const { validateNameParam } = require('../validators/nameValidatorParam');
 
 
-router.post('/', validateService, validateResult, checkUniqueField(Service,'name'),createService);
-// router.get('/', getOwners);
+router.post('/', validateNameeBody, validateResult, checkUniqueField(Service,'name'),createService);
+router.get('/', getServices);
 
-// router.get('/:id', validateId, validateResult , getOwnerById);
-// router.get('/email/:email', validateEmail, validateResult ,getOwnerByEmail);
+router.get('/:id', validateId, validateResult , getServiceById);
+router.get('/name/:name', validateNameParam, validateResult ,getServiceByName);
 
-// router.delete('/:id', validateId,validateResult , deleteOwner);
+//hide routes to protect front-end guys
+//router.delete('/:id', validateId, validateResult , deleteServiceById);
+//outer.delete('/name/:name', validateNameParam, validateResult ,deleteServiceByName);
 
 module.exports = router;

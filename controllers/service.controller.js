@@ -56,7 +56,41 @@ const getServiceByName = async (req, res) => {
 }
 
 
+const deleteServiceById = async (req, res) => {
+    try {
+        const service = await Service.findByPk(req.params.id);
+        if (service) {
+        await service.destroy();
+        res.json(service);
+        } else {
+        res.status(404).json({ message: 'Service not found by id' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to delete service', error: error.message });
+    }
+}
+
+const deleteServiceByName = async (req, res) => {
+    try {
+        const service = await Service.findOne({ where: { name: req.params.name } });
+        if (service) {
+        await service.destroy();
+        res.json(service);
+        } else {
+        res.status(404).json({ message: 'Service not found by name' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to delete service', error: error.message });
+    }
+}
+
 module.exports = {
   createService,
   getServices,
+  getServiceById,
+  getServiceByName,
+  deleteServiceById,
+    deleteServiceByName
 };
