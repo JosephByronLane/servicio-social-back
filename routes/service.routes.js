@@ -5,11 +5,9 @@ const { validateOwner } = require('../validators/ownerValidator');
 const { validateId } = require('../validators/idValidator');
 const validateResult = require('../middleware/resultValidator');
 const { validateEmail } = require('../validators/emailValidator');
-const checkUniqueField = require('../middleware/checkUniqueField');
-const { Owner } = require('../models');
 
 
-router.post('/', validateOwner, validateResult, checkUniqueField(Owner, 'email') ,createOwner);
+router.post('/', validateOwner, validateResult ,createOwner);
 router.get('/', getOwners);
 
 router.get('/:id', validateId, validateResult , getOwnerById);

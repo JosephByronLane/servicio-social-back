@@ -2,8 +2,6 @@ const { Owner } = require('../models');
 
 const { validationResult } = require('express-validator');
 
-
-
 const createOwner = async (req, res) => {
   try {
     const { firstName, lastName, email, telephone } = req.body;
@@ -13,15 +11,6 @@ const createOwner = async (req, res) => {
   } catch (error) {
     console.error('Error creating owner:', error);
 
-    //owner with email already exists
-    if (error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ 
-        message: 'Owner with this email already exists.', 
-        error: error.errors.map(e => e.message) 
-      });
-    }
-
-    //other errors
     res.status(500).json({ message: 'Failed to create owner', error: error.message });
   }
 };
