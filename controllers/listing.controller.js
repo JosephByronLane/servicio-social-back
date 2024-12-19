@@ -144,7 +144,43 @@ const getListingById = async (req, res) => {
     }
   };
 
+const getListings = async (req, res) => {
+  try {
+    const listings = await Listing.findAll({
+      include: [
+        {
+          model: House,
+          as: 'house',
+          include: [
+            {
+              model: Owner,
+              as: 'owner',
+              attributes: ['id', 'firstName', 'lastName', 'email', 'telephone'],
+            },
+            {
+              model: Service,
+              as: 'services',
+              through: { attributes: [] },
+            },
+          ],
+        },
+        {
+          model: Image,
+          as: 'images',
+        },
+      ],
+    });
+
+    res.json(listings);
+  } catch (error) {
+    console.error('Error fetching listings:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
 
 module.exports = {
   createListing,
+  getListingById,
+    getListings,
 };
