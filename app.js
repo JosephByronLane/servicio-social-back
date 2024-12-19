@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 //route modules
 var ownerRouter = require('./routes/owner.routes');
+var serviceRouter = require('./routes/service.routes');
 var app = express();
 
 // view engine setup
@@ -22,10 +23,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //routes
 app.use('/owner', ownerRouter);
+app.use('/service', serviceRouter)
+
+
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.all('*', (req, res, next) => {
+  next(createError(404, 'what???'));
 });
 
 app.use(errorHandler); 
