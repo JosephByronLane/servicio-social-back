@@ -59,5 +59,15 @@ module.exports = (sequelize) => {
     },
   );
 
+  House.afterDestroy(async (house, options) => {
+    
+    const listings = await house.getListings();
+    for (const listing of listings) {
+      await listing.destroy({ transaction: options.transaction });
+    }
+
+    
+    await house.removeServices(await house.getServices(), { transaction: options.transaction });
+  });
   return House;
 };

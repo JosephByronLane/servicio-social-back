@@ -33,6 +33,11 @@ module.exports = (sequelize) => {
         paranoid: true,
     }
   );
-
+  Owner.afterDestroy(async (owner, options) => {
+    const houses = await owner.getHouses();
+    for (const house of houses) {
+      await house.destroy({ transaction: options.transaction });
+    }
+  });
   return Owner;
 };

@@ -31,6 +31,11 @@ module.exports = (sequelize) => {
         paranoid: true,
     },
   );
-
+  Listing.afterDestroy(async (listing, options) => {
+    const images = await listing.getImages();
+    for (const image of images) {
+      await image.destroy({ transaction: options.transaction });
+    }
+  });
   return Listing;
 };
