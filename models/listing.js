@@ -26,7 +26,10 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-    }
+    },
+    {
+        paranoid: true,
+    },
   );
 
   return Listing;

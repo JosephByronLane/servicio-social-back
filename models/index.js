@@ -45,8 +45,7 @@ Service.belongsToMany(House, {
 });
 
 // houses ↔ Listings: one-to-one 
-// TODO: Check if this is correct, maybe one house can have many listings? Initial requirement document didn't specify.
-House.belongsTo(Listing, { foreignKey: 'houseId', as: 'listings' });
+House.hasMany(Listing, { foreignKey: 'houseId', as: 'listings' });
 Listing.belongsTo(House, { foreignKey: 'houseId', as: 'house' });
 
 // Listings ↔ Images: One-to-Many
@@ -54,6 +53,8 @@ Listing.belongsTo(House, { foreignKey: 'houseId', as: 'house' });
 Listing.hasMany(Image, { foreignKey: 'listingId', as: 'images' });
 Image.belongsTo(Listing, { foreignKey: 'listingId', as: 'listing' });
 
+
+//TODO: make all tables paranoid
 module.exports = {
   sequelize,
   Owner,

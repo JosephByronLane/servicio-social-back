@@ -28,7 +28,10 @@ module.exports = (sequelize) => {
           isUrl: true,
         },
       },
-    }
+    },
+    {
+        paranoid: true,
+    },
   );
 
   return Image;

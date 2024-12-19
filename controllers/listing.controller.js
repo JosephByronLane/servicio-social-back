@@ -178,9 +178,47 @@ const getListings = async (req, res) => {
   }
 }
 
+const deleteListingById = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+        const listing = await Listing.findByPk(id);
+    
+        if (!listing) {
+        return res.status(404).json({ message: 'Listing not found' });
+        }
+    
+        await listing.destroy();
+    
+        res.json({ message: 'Listing deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting listing:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
 
+const deleteListingByEmail = async (req, res) => {
+    const { email } = req.params;
+    
+    try {
+        const listing = await Listing.findOne({ where: { email } });
+    
+        if (!listing) {
+        return res.status(404).json({ message: 'Listing not found' });
+        }
+    
+        await listing.destroy();
+    
+        res.json({ message: 'Listing deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting listing:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
 module.exports = {
-  createListing,
-  getListingById,
+    createListing,
+    getListingById,
     getListings,
+    deleteListingById,
+    deleteListingByEmail
 };

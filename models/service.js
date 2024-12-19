@@ -14,7 +14,10 @@ module.exports = (sequelize) => {
         allowNull: false,
         unique: true,
       },
-    }
+    },
+    {
+        paranoid: true,
+    },
   );
 
   return Service;

@@ -54,6 +54,9 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
     },
+    {
+        paranoid: true,
+    },
   );
 
   return House;
