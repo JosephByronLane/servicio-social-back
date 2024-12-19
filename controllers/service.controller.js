@@ -92,5 +92,5 @@ module.exports = {
   getServiceById,
   getServiceByName,
   deleteServiceById,
-    deleteServiceByName
+  deleteServiceByName
 };
