@@ -9,7 +9,7 @@ const { createService, getServices, getServiceById, getServiceByName, deleteServ
 const { validateNameParam } = require('../validators/nameValidatorParam');
 
 
-router.post('/', validateNameeBody, validateResult, checkUniqueField(Service,'name'),createService);
+router.post('/', validateNameeBody, validateResult,createService);
 router.get('/', getServices);
 
 router.get('/:id', validateId, validateResult , getServiceById);
