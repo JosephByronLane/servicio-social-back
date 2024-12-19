@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { validateId } = require('../validators/idValidator');
+const { validateId } = require('../validators/id.validator');
 const validateResult = require('../middleware/resultValidator');
-const { validateNameeBody } = require('../validators/nameValidatorBody');
+const { validateNameeBody } = require('../validators/nameBody.validator');
 const checkUniqueField = require('../middleware/checkUniqueField');
 const { Service } = require('../models');
 const { createService, getServices, getServiceById, getServiceByName, deleteServiceById, deleteServiceByName } = require('../controllers/service.controller');
-const { validateNameParam } = require('../validators/nameValidatorParam');
+const { validateNameParam } = require('../validators/nameParam.validator');
 
 
 router.post('/', validateNameeBody, validateResult,createService);

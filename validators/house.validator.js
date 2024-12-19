@@ -4,7 +4,9 @@ const validateHouse = (prefix = '') => [
   check(`${prefix}type`)
     .notEmpty().withMessage('Property type is required.')
     .isString().withMessage('Property type must be a string.')
-    .isIn(['Casa', 'Departamento', 'Cuarto']).withMessage('Invalid property type.'),
+    .trim()
+    .toLowerCase()
+    .isIn(['casa', 'cepartamento', 'cuarto']).withMessage('Invalid property type. Mus tbe "Casa", "Departamento" or "Cuarto".'),
   
   check(`${prefix}isLookingForRoommate`)
     .optional()
