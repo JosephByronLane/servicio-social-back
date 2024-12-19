@@ -65,7 +65,6 @@ module.exports = (sequelize) => {
     for (const listing of listings) {
       await listing.destroy({ transaction: options.transaction });
     }
-
     
     await house.removeServices(await house.getServices(), { transaction: options.transaction });
   });

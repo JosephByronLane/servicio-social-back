@@ -10,7 +10,7 @@ const { validateEmail } = require('../validators/email.validator');
 const router = express.Router();
 
 //TODO: add image validation
-router.post('/', validateHouse('house.'), validateListing('listing.'), validateOwner('owner.'), validateServices(''), validateResult,  createListing);
+router.post('/', validateHouse('house.'), validateListing('listing.'), validateOwner('owner.', {checkUnique:false}), validateServices(''), validateResult,  createListing);
 router.get('/:id', validateId, validateResult, getListingById);
 router.get('/', getListings);
 

@@ -2,7 +2,7 @@ const { body } = require('express-validator');
 const { checkUniqueField } = require("../middleware/checkUniqueField.middleware");
 const { Owner } = require('../models');
 
-const validateOwner  = (prefix = '') => [
+const validateOwner  = (prefix = '', options = {checkUnique : true}) => [
     body(`${prefix}firstName`)
     .notEmpty()
     .withMessage('First name is required')
@@ -19,6 +19,7 @@ const validateOwner  = (prefix = '') => [
     .isEmail()
     .withMessage('Valid email is required')
     .normalizeEmail()
+    .if(() => options.checkUnique)
     .custom(checkUniqueField(Owner, 'email', 'A user with that email already exists.')),
 
     body(`${prefix}telephone`)

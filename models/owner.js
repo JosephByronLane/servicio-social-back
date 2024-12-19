@@ -33,10 +33,20 @@ module.exports = (sequelize) => {
         paranoid: true,
     }
   );
+
+
   Owner.afterDestroy(async (owner, options) => {
     const houses = await owner.getHouses();
     for (const house of houses) {
       await house.destroy({ transaction: options.transaction });
+    }
+    const listings = await owner.getListings();
+    for (const listing in listings){
+        await listing.destroy({ transaction: options.transaction });
+    }
+    const houseServices = await owner.getHouseServices();
+    for (const houseService of houseServices){
+        await houseService.destroy({ transaction: options.transaction });
     }
   });
   return Owner;
