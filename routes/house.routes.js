@@ -13,7 +13,7 @@ router.get('/owner/:id', validateId, validateResult, getHousesByOwnerId);
 router.get('/email/:email', validateEmail, validateResult, getHousesByOwnerEmail);
 router.get('/:id', validateId, validateResult, getHouseById);
 
-router.post('/', validateHouse, validateResult ,createHouse);
+router.post('/', validateHouse(''), validateResult ,createHouse);
 
 router.delete('/:id', validateId, validateResult, deleteHouseById);
 

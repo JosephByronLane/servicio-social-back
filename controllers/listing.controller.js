@@ -16,15 +16,23 @@ const createListing = async (req, res) => {
   const transaction = await sequelize.transaction();
 
   try {
+
+    //since we might be trying to use a deleted user, we need to use paranoid: false
     const [ownerInstance, created] = await Owner.findOrCreate({
-      where: { email: owner.email },
-      defaults: {
-        firstName: owner.firstName,
-        lastName: owner.lastName,
-        telephone: owner.telephone,
-      },
-      transaction,
-    });
+        where: { email: owner.email },
+        defaults: {
+          firstName: owner.firstName,
+          lastName: owner.lastName,
+          telephone: owner.telephone,
+        },
+        transaction,
+        paranoid: false
+      });
+      
+      //if the owner wasn't created (alreadi exists) and it has a deletedAt value, we restore it
+      if (!created && ownerInstance.deletedAt) {
+        await ownerInstance.restore({ transaction });
+      }
 
     const houseInstance = await House.create(
       {
