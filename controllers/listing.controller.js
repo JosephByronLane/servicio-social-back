@@ -201,15 +201,19 @@ const deleteListingByEmail = async (req, res) => {
     const { email } = req.params;
     
     try {
-        const listing = await Listing.findOne({ where: { email } });
+        const listings = await Listing.findAll({ where: { email } });
     
-        if (!listing) {
-        return res.status(404).json({ message: 'Listing not found' });
+        if (!listings) {
+            console.log("No listing found");
+            return res.status(404).json({ message: 'Listing not found' });
         }
+        console.log("Found listings")
+        listings.forEach(async listing => {
+            console.log("Deleting listing");
+            await listing.destroy();
+        });
     
-        await listing.destroy();
-    
-        res.json({ message: 'Listing deleted successfully' });
+        res.json({ message: 'Listings deleted successfully' });
     } catch (error) {
         console.error('Error deleting listing:', error);
         res.status(500).json({ message: 'Server error' });
