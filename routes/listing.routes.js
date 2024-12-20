@@ -15,5 +15,7 @@ router.get('/:id', validateId, validateResult, getListingById);
 router.get('/', getListings);
 
 router.delete('/:id', validateId, validateResult, deleteListingById);
+
+//TODO: make some sort of JWT for when email messages about the house being down.
 router.delete('/email/:email', validateEmail, validateResult, deleteListingByEmail);
 module.exports = router;

@@ -1,0 +1,17 @@
+const { router } = require("../app");
+const { getHouses, createHouse, getHousesByOwnerId, getHousesByOwnerEmail, deleteHouseById, getHouseById } = require("../controllers/house.controller");
+const validateResult = require("../middleware/resultValidator.middleware");
+const { validateEmail } = require("../validators/email.validator");
+const { validateHouse } = require("../validators/house.validator");
+const { validateId } = require("../validators/id.validator");
+
+
+
+router.get('/', getHouses);
+router.get('/owner/:id', validateId, validateResult, getHousesByOwnerId)
+router.get('/email/:email', validateEmail, validateResult, getHousesByOwnerEmail)
+router.get('/:id', validateId, validateResult, getHouseById)
+
+router.post('/', validateHouse, validateResult ,createHouse)
+
+router.delete('/:id', validateId, validateResult, deleteHouseById)  

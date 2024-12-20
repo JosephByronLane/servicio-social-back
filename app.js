@@ -9,6 +9,7 @@ const errorHandler = require('./middleware/errorHandler.middleware');
 var ownerRouter = require('./routes/owner.routes');
 var serviceRouter = require('./routes/service.routes');
 var listingRouter = require('./routes/listing.routes');
+var houseRouter = require('./routes/house.routes');
 var app = express();
 
 // view engine setup
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/owner', ownerRouter);
 app.use('/service', serviceRouter);
 app.use('/listing', listingRouter);
-
+app.use('/house' , houseRouter);
 
 // catch 404 and forward to error handler
 app.all('*', (req, res, next) => {
