@@ -149,11 +149,12 @@ const getHouseById = async (req, res) => {
     }
 }
 
+
 module.exports = {
   createHouse,
   getHouses,
   deleteHouseById,
   getHousesByOwnerEmail,
   getHousesByOwnerId,
-  getHouseById
+  getHouseById,
 };

@@ -1,4 +1,5 @@
 // controllers/listingController.js
+const { Op } = require('sequelize');
 const { sequelize, Owner, House, Service, Listing, Image } = require('../models');
 
 //for UI simplicity we make a giant monolith function that adds a listing with all its associated data.
@@ -227,10 +228,31 @@ const deleteListingByEmail = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 }
+
+const searchListingByTitle = async (req, res) => {
+    const { name } = req.params;
+
+    try {
+        const listings = await Listing.findAll({
+            where: {
+                title: {
+                    [Op.like]: `%${name}%`
+                }
+            }
+        });
+
+        res.json(listings);
+    } catch (error) {
+        console.error('Error searching listing:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
 module.exports = {
     createListing,
     getListingById,
     getListings,
     deleteListingById,
-    deleteListingByEmail
+    deleteListingByEmail,
+    searchListingByTitle
 };

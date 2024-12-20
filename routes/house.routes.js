@@ -4,6 +4,8 @@ const validateResult = require("../middleware/resultValidator.middleware");
 const { validateEmail } = require("../validators/email.validator");
 const { validateHouse } = require("../validators/house.validator");
 const { validateId } = require("../validators/id.validator");
+const { searchListingByTitle } = require("../controllers/house.controller");
+const { validateNameParam } = require('../validators/nameParam.validator');
 const router = express.Router();
 
 
