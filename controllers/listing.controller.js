@@ -1,6 +1,7 @@
 // controllers/listingController.js
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const { sequelize, Owner, House, Service, Listing, Image } = require('../models');
+const { search } = require('../app');
 
 //for UI simplicity we make a giant monolith function that adds a listing with all its associated data.
 const createListing = async (req, res) => {
@@ -248,11 +249,195 @@ const searchListingByTitle = async (req, res) => {
     }
 }
 
+const searchListings = async (req, res) => {
+    try {
+        //query params
+        let  {
+          services,               // array of service names or IDs
+          type,                   // 'casa', 'departamento', 'cuarto'
+          isLookingForRoommate,  // 'true' or 'false'
+          isOnlyWomen,            // 'true' or 'false'
+          minPrice,               // minimum price (decimal)
+          maxPrice,               // maximum price (decimal)
+          title,                  // title keyword
+          sort,                   // 'newest', 'oldest', 'alphabetical', 'price_asc', 'price_desc'
+          paging,                 // 'true' or 'false'
+          page = 1,               // page number (default: 1)
+          pageSize = 10           // number of items per page (default: 10)
+        } = req.query;
+
+        // we make sure that services is an array because else it throws an error when parsing them.
+        // we also normalize the services to an array of strings
+        if (services) {
+            
+            if (typeof services === 'string') {
+              services = services.split(',').map(service => service.trim());
+            }
+             else if (!Array.isArray(services)) {
+              services = [services];
+            }
+          
+        }
+      
+
+        //query options
+        const queryOptions = {
+          where: {},
+          include: [
+            {
+              model: House,
+              as: 'house',
+              where: {}, 
+              include: [
+                {
+                  model: Service,
+                  as: 'services',
+                  attributes: ['id', 'name'],
+                  through: { attributes: [] }, 
+                },
+              ],
+            },
+            {
+              model: Image,
+              as: 'images',
+              attributes: ['id', 'imageUrl'],
+            },
+          ],
+          distinct: true,
+        };
+    
+        // titles
+        if (title) {
+          queryOptions.where.title = {
+            [Op.like]: `%${title}%`,
+          };
+        }
+        
+        // house filters
+        if (type) {
+          queryOptions.include[0].where.type = type;
+        }
+    
+        if (isLookingForRoommate !== undefined) {
+          queryOptions.include[0].where.isLookingForRoommate = isLookingForRoommate === 'true';
+        }
+    
+        if (isOnlyWomen !== undefined) {
+          queryOptions.include[0].where.isOnlyWomen = isOnlyWomen === 'true';
+        }
+    
+        if (minPrice || maxPrice) {
+          queryOptions.include[0].where.price = {};
+          if (minPrice) {
+            queryOptions.include[0].where.price[Op.gte] = parseFloat(minPrice);
+          }
+          if (maxPrice) {
+            queryOptions.include[0].where.price[Op.lte] = parseFloat(maxPrice);
+          }
+        }
+    
+    // services
+    if (services && services.length > 0) {
+        queryOptions.include[0].include[0].where = {
+          name: {
+            [Op.in]: services,
+          },
+        };
+  
+        // Group by Listing.id and ensure that the number of matched services equals the number of services queried
+        queryOptions.group = ['Listing.id'];
+        queryOptions.having = Sequelize.where(
+          Sequelize.fn('COUNT', Sequelize.fn('DISTINCT', Sequelize.col('house.services.id'))),
+          {
+            [Op.eq]: services.length,
+          }
+        );
+      }
+    
+        // sorting results
+        switch (sort) {
+          case 'newest':
+            queryOptions.order = [['createdAt', 'DESC']];
+            break;
+          case 'oldest':
+            queryOptions.order = [['createdAt', 'ASC']];
+            break;
+          case 'alphabetical':
+            queryOptions.order = [['title', 'ASC']];
+            break;
+          case 'price_asc':
+            queryOptions.order = [[{ model: House, as: 'house' }, 'price', 'ASC']];
+            break;
+          case 'price_desc':
+            queryOptions.order = [[{ model: House, as: 'house' }, 'price', 'DESC']];
+            break;
+          default:
+            queryOptions.order = [['createdAt', 'DESC']];
+        }
+    
+        // page
+        let paginationOptions = {};
+        if (paging === 'true') {
+          const limit = parseInt(pageSize, 10) > 0 ? parseInt(pageSize, 10) : 10;
+          const offset = (parseInt(page, 10) - 1) * limit;
+          paginationOptions = { limit, offset };
+        }
+    
+        // merge
+        Object.assign(queryOptions, paginationOptions);
+    
+        
+        const listings = await Listing.findAll(queryOptions);
+    
+        // metadata
+        let total = null;
+        if (paging === 'true') {
+          const countOptions = {
+            where: queryOptions.where,
+            include: queryOptions.include,
+            distinct: true,
+          };
+    
+          if (queryOptions.group) {
+            
+            const countResult = await Listing.findAll({
+              attributes: [
+                [Sequelize.fn('COUNT', Sequelize.col('Listing.id')), 'count'],
+              ],
+              ...countOptions,
+              group: ['Listing.id'],
+              having: queryOptions.having,
+            });
+            total = countResult.length;
+          } else {
+            total = await Listing.count(countOptions);
+          }
+        }
+    
+    
+        res.status(200).json({
+          data: listings,
+          ...(paging === 'true' && {
+            pagination: {
+              total,
+              page: parseInt(page, 10),
+              pageSize: parseInt(pageSize, 10),
+              totalPages: Math.ceil(total / parseInt(pageSize, 10)),
+            },
+          }),
+        });
+      } catch (error) {
+        console.error('Error in searchListings:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+  };
+
 module.exports = {
     createListing,
     getListingById,
     getListings,
     deleteListingById,
     deleteListingByEmail,
-    searchListingByTitle
+    searchListingByTitle,
+    searchListings,
 };

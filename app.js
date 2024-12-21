@@ -31,7 +31,7 @@ app.use('/house' , houseRouter);
 
 // catch 404 and forward to error handler
 app.all('*', (req, res, next) => {
-  next(createError(404, 'what???'));
+  next(createError(404, 'what??? wrong API endpoint bozo, this one dont exist'));
 });
 
 app.use(errorHandler); 
