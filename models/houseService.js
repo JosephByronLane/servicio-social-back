@@ -27,7 +27,10 @@ module.exports = (sequelize) => {
         onDelete: 'CASCADE',
         primaryKey: true,
       },
-    }
+    },
+    {
+        paranoid: true,
+    },
   );
 
   return HouseService;

@@ -11,8 +11,7 @@ services:
       - .:/usr/src/app
 
     #start the express app with nodemon (dev)
-    command: npm run dev
-
+    command: npm run pm2dev
     #wait for mariadb to launch before starting the Express.js app
     depends_on:
       - mariadb
@@ -23,6 +22,8 @@ services:
       DB_PASS: ${DB_PASSWORD}    
       DB_NAME: ${DB_NAME}
 
+
+#mardib database
   mariadb:
     image: mariadb:latest
     container_name: mariadb_container

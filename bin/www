@@ -21,8 +21,8 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
-//dtaanase connection and initialization script
+var sync = false; //set to true to sync the database
+//database connection and initialization script
 const initializeDatabaseAndStartServer = async () => {
   try {
     
@@ -33,12 +33,17 @@ const initializeDatabaseAndStartServer = async () => {
     } catch (error) {
       console.error('Unable to connect to the database:', error);
     }
-    // we sync (create) all needed database tables automatically (god bless automation)
-    await sequelize.sync({
-      // force: false
-     }); //to do hard reset and drop all tables set force to true
 
-    console.log('All models were synchronized successfully.');
+    if(sync) {
+    // we sync (create) all needed database tables automatically (god bless automation)
+      await sequelize.sync({
+      force: true
+     }); //to do hard reset and drop all tables set force to true
+     console.log('All models were synchronized successfully.');
+
+    }
+
+
 
     // initial services for service table, THIS IS NEEDED, WE NEED TO SEED THE DATABASE ELSE EVERYTHING BREAKS
     const services = [
@@ -55,14 +60,19 @@ const initializeDatabaseAndStartServer = async () => {
       'food',
     ];
 
-    //FIXME: this rawdogs and adds everything to the database wether its there or not, 
-    for (const serviceName of services) {
-      await Service.findOrCreate({
-        where: { name: serviceName },
-      });
-    }
+    if(sync) {
+      for (const serviceName of services) {
+        await Service.findOrCreate({
+          where: { name: serviceName },
+        });
+      }
+      console.log('Services have been seeded.');
 
-    console.log('Services have been seeded.');
+    }
+    //FIXME: this rawdogs and adds everything to the database wether its there or not, 
+  
+
+
 
     //start the server
 

@@ -9,6 +9,7 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install
+RUN npm install pm2 -g
 
 # Copy the rest of the application source code
 COPY . .
@@ -17,4 +18,4 @@ COPY . .
 EXPOSE 3000
 
 # Command to start your Express.js app
-CMD ["npm", "start"]
+CMD ["pm2-dev", "ecosystem.config.js", "--no-daemon"]
