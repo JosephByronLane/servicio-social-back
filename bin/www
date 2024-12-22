@@ -37,7 +37,7 @@ const initializeDatabaseAndStartServer = async () => {
     if(sync) {
     // we sync (create) all needed database tables automatically (god bless automation)
       await sequelize.sync({
-      force: true
+        alter: true
      }); //to do hard reset and drop all tables set force to true
      console.log('All models were synchronized successfully.');
 
