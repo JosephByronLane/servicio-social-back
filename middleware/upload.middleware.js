@@ -34,7 +34,9 @@ const fileFilter = (req, file, cb) => {
   if (allowedTypes.test(ext) && allowedTypes.test(mime)) {
     cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed!'));
+    const error = new Error('Only image files (jpeg, jpg, png) are allowed!');
+    error.status = 400; 
+    cb(error);
   }
 };
 
