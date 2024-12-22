@@ -4,13 +4,25 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const errorHandler = require('./middleware/errorHandler.middleware');
-
+const cors = require('cors');
 //route modules
 var ownerRouter = require('./routes/owner.routes');
 var serviceRouter = require('./routes/service.routes');
 var listingRouter = require('./routes/listing.routes');
 var houseRouter = require('./routes/house.routes');
+var imageRouter = require('./routes/image.routes');
+
 var app = express();
+
+app.use(cors({
+  origin: '*', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+}));
+
+app.options('*', cors());
+
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,7 +40,10 @@ app.use('/owner', ownerRouter);
 app.use('/service', serviceRouter);
 app.use('/listing', listingRouter);
 app.use('/house' , houseRouter);
-
+app.use('/image', imageRouter);
+app.get('/', (req, res) => {
+  res.render('index');
+});
 // catch 404 and forward to error handler
 app.all('*', (req, res, next) => {
   next(createError(404, 'what??? wrong API endpoint bozo, this one dont exist'));

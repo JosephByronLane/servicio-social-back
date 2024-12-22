@@ -1,6 +1,5 @@
 
 //this function is called through the validators, not through the routes.
-
 const checkUniqueField = (model, field, message) => {
     return async (value) => {
       console.log("Searching for existing record with field:", field, "and value:", value);

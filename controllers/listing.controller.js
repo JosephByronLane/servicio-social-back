@@ -1,19 +1,29 @@
 // controllers/listingController.js
 const { Op, Sequelize } = require('sequelize');
 const { sequelize, Owner, House, Service, Listing, Image } = require('../models');
-const { search } = require('../app');
-
+const path = require('path');
+const fs = require('fs-extra');
 //for UI simplicity we make a giant monolith function that adds a listing with all its associated data.
 const createListing = async (req, res) => {
     
   const {
+    tempId, //tempId from image upload
     owner, //object with owner data       
     house, //object with house data
     services,    //array of service names or IDs
     listing, //object with  listing data
-    images,  //array with image URLS
     // TODO: Implement image upload
   } = req.body;
+
+    const tempDir = process.env.UPLOAD_TEMP_DIR || `./assets/temp/${tempId}`;
+    const permanentDir = process.env.UPLOAD_PERMANENT_DIR || './assets/listings';
+
+  //check if the temp directory exists and if there are images in it
+  if (!fs.existsSync(tempDir)) {
+    return res.status(400).json({ message: 'Invalid tempId or no images uploaded' });
+  }
+
+
 
   const transaction = await sequelize.transaction();
 
@@ -35,6 +45,8 @@ const createListing = async (req, res) => {
       if (!created && ownerInstance.deletedAt) {
         await ownerInstance.restore({ transaction });
       }
+
+
 
     const houseInstance = await House.create(
       {
@@ -73,14 +85,40 @@ const createListing = async (req, res) => {
       { transaction }
     );
 
-    if (images && images.length > 0) {
-      const imageRecords = images.map((url) => ({
-        listingId: listingInstance.id,
-        imageUrl: url,
-      }));
+    const listingId = listingInstance.id;
 
-      await Image.bulkCreate(imageRecords, { transaction });
-    }
+    const images = await Image.findAll({
+      where: { tempId },
+      transaction,
+    });
+
+    //move the images from their temp directory to the prod one
+    const movedImages = await Promise.all(
+        images.map(async (image) => {
+        const oldPath = path.resolve(image.imageUrl);
+        const newDir = path.join(permanentDir, `${listingId}`);
+        const newPath = path.join(newDir, path.basename(image.imageUrl));
+
+        
+        await fs.ensureDir(newDir);
+        
+        await fs.move(oldPath, newPath, { overwrite: true });
+
+        //update image record with prod data (removing the tempid)
+        image.listingId = listingId;
+        image.tempId = null;
+        image.imageUrl = path.relative('./', newPath).replace(/\\/g, '/'); 
+        console.log("Image Listing ID: ", image.listingId);
+
+        console.log("Image URL: ", image.imageUrl);
+
+        await image.save({ transaction });
+        return {
+            id: image.id,
+            imageUrl: image.imageUrl,
+        };
+        })
+    );
 
     await transaction.commit();
 
@@ -102,6 +140,7 @@ const createListing = async (req, res) => {
     res.status(201).json({
       message: 'Listing created successfully.',
       data: createdListing,
+      images: movedImages,
     });
   } catch (error) {
     //if anything goes wrong, we rollback the transaction
