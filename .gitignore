@@ -92,7 +92,7 @@ out
 dist
 
 # image uploads
-.assets/
+.assets/*
 
 
 # Gatsby files
