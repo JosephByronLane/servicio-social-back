@@ -14,19 +14,20 @@ module.exports = (sequelize) => {
       },
       listingId: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
+        allowNull: true, //initially null because its first created with a uploadSessionId
         references: {
           model: 'Listings',
           key: 'id',
         },
         onDelete: 'CASCADE',
       },
+      tempId: {
+        type: DataTypes.UUID,
+        allowNull: true, 
+      },
       imageUrl: {
         type: DataTypes.STRING(500),
-        allowNull: false,
-        validate: {
-          isUrl: true,
-        },
+        allowNull: true,
       },
     },
     {

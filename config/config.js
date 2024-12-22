@@ -14,7 +14,7 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mariadb',
-    logging: true,
+    logging: false,
   },
   //TODO: define prod and test environments??
   //enough time???
