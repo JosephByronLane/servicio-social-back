@@ -50,6 +50,10 @@ jobs:
         echo "#url" >> .env
         echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
         echo "DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest" >> .env
+        
+    - name: List files in the repository
+      run: ls -la
+
 
     - name: Copy docker-compose.yml to AWS Lightsail
       uses: appleboy/scp-action@v0.1.1
