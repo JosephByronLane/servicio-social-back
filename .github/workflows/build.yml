@@ -56,11 +56,12 @@ jobs:
 
 
     - name: Copy docker-compose.yml to AWS Lightsail
-      uses: appleboy/scp-action@v0.1.1
+      uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.LIGHTSAIL_SSH_HOST }}
         username: ${{ secrets.LIGHTSAIL_SSH_USER }}
         key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+        port: 22
         source: "docker-compose.prod.yml,.env"
         target: "/home/${{ secrets.LIGHTSAIL_SSH_USER }}/app/"
 
