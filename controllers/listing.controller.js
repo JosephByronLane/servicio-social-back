@@ -22,7 +22,10 @@ const createListing = async (req, res) => {
   if (!fs.existsSync(tempDir)) {
     return res.status(400).json({ message: 'Invalid tempId or no images uploaded' });
   }
-
+  if(fs.readdirSync(tempDir).length === 0) {
+    return res.status(400).json({ message: 'No images uploaded' });
+  }
+  
 
 
   const transaction = await sequelize.transaction();

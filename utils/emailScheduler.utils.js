@@ -14,13 +14,16 @@ const sendMonthlyReminders = async () => {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(now.getMonth() - 1);
 
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(now.getDate() - 7);
+
     const oneMinuteAgo = new Date();
     oneMinuteAgo.setMinutes(now.getMinutes() - 1);
 
     const listings = await Listing.findAll({
       where: {
         createdAt: {
-          [Op.lt]: oneMinuteAgo,
+          [Op.lt]: oneWeekAgo,
         },
       },
       include: [
