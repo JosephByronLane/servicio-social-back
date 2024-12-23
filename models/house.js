@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
         onDelete: 'CASCADE',
       },
       type: {
-        type: DataTypes.ENUM('Casa', 'Departamento', 'Cuarto'), //TODO: add custom errors for enum fails in the service
+        type: DataTypes.ENUM('Casa', 'Departamento', 'Cuarto'),
         allowNull: false,
       },
       isLookingForRoommate: {

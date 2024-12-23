@@ -1,7 +1,7 @@
 services:
 #express API
   express:
-    build: .
+    image: joemama7/servicio-social-back:latest
     container_name: express_container
     ports:
       - "80:3000"

@@ -54,7 +54,6 @@ Listing.hasMany(Image, { foreignKey: 'listingId', as: 'images' });
 Image.belongsTo(Listing, { foreignKey: 'listingId', as: 'listing' });
 
 
-//TODO: make all tables paranoid
 module.exports = {
   sequelize,
   Owner,

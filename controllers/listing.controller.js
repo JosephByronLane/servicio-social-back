@@ -13,7 +13,6 @@ const createListing = async (req, res) => {
     house, //object with house data
     services,    //array of service names or IDs
     listing, //object with  listing data
-    // TODO: Implement image upload
   } = req.body;
 
     const tempDir = process.env.UPLOAD_TEMP_DIR || `./assets/temp/${tempId}`;

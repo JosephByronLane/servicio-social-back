@@ -12,7 +12,6 @@ const errorHandler = (err, req, res, next) => {
   }
 
   //incase user breaks multer image upload rules
-  //TODO: doesnt seem to work
   if (err instanceof multer.MulterError) {
     let message = 'File upload error';
 
