@@ -52,18 +52,28 @@ const sendMonthlyReminders = async () => {
         email: ownerEmail,
       });
 
-      const deletionUrl = `${process.env.FRONTEND_URL}/delete/delete?token=${token}`;
+      const deletionUrl = `${process.env.FRONTEND_URL}/listing/delete/delete?token=${token}`;
 
-      const subject = 'Tienes una casa en renta aun disponible.';
-      const text = `blablablablablablablablalbabab`;
+      const templatePath = path.join(__dirname, '..', 'templates', 'email.template.html');
+      const logoPath = path.join(__dirname, '..', 'templates', 'logo-universidad-modelo.png');
 
-      const html = `
-        <p>Hola ${owner.firstName},</p>
-        <p>Tu listado "<strong>${listing.title}</strong>" bla blab bla aun disponible?</p>
-        <a href="${deletionUrl}">borrar</a>
-      `;
+      const subject = 'Recordatorio sobre disponibilidad de tu listado';
+      const replacements = {
+        ownerName: owner.firstName,
+        listingTitle: listing.title,
+        deletionUrl,
+      };
 
-      await sendEmail(ownerEmail, subject, text, html);
+      const attachments = [
+        {
+          filename: 'logo-universidad-modelo.png',
+          path: logoPath,
+          cid: 'logo_cid', 
+        },
+      ];
+
+      // Send the email
+      await sendEmail(ownerEmail, subject, templatePath, replacements, attachments);
     }
 
     console.log('Monthly reminder emails sent successfully.');
@@ -74,7 +84,7 @@ const sendMonthlyReminders = async () => {
 
 
 const initMonthlyEmailScheduler = () => {
-  cron.schedule('55 5 * * *', () => {
+  cron.schedule('0 6 * * *', () => {
     console.log('Running monthly email reminder task...');
     sendMonthlyReminders();
   });
@@ -86,3 +96,4 @@ const initMonthlyEmailScheduler = () => {
 
 module.exports = initMonthlyEmailScheduler;
 
+// module.exports = sendMonthlyReminders;

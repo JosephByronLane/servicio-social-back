@@ -46,9 +46,22 @@ app.use('/email', emailRouter);
 app.get('/', (req, res) => {
   res.render('index');
 });
+
+//TODO: if this list grows to big we move them to their own file for easier managing
+app.get('/deletion.success.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '/views/deletion.success.html'));
+});
+
+// Route to serve deletion-error.html
+app.get('/deletion.error.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '/views/deletion.error.html'));
+});
+
+
+
 // catch 404 and forward to error handler
 app.all('*', (req, res, next) => {
-  next(createError(404, 'what??? wrong API endpoint bozo, this one dont exist'));
+  res.status(404).json({ message: 'what??? wrong API endpoint bozo, this one dont exist' });
 });
 
 app.use(errorHandler); 

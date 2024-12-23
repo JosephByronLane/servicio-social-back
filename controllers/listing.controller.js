@@ -258,14 +258,13 @@ const deleteListingByEmail = async (req, res) => {
       const decoded = verifyDeletionToken(token);
   
       const { listingId, email } = decoded;
-        console.log("Listing ID: ", listingId);
       const listing = await Listing.findOne({
         where: { id: listingId },
         include: [{ model: House, as: 'house', include: [{ model: Owner, as: 'owner' }] }],
       });
   
       if (!listing) {
-        return res.status(404).json({ message: 'Listing not found.' });
+        res.redirect(`${process.env.FRONTEND_URL}/deletion.error.html`);
       }
       console.log("Found Listing");
       const ownerEmail = listing.house.owner.email; 
@@ -283,7 +282,7 @@ const deleteListingByEmail = async (req, res) => {
         console.log("Listing Removed");
         await transaction.commit();
   
-        res.status(200).json({ message: 'Listing deleted successfully.' });
+        res.redirect(`${process.env.FRONTEND_URL}/deletion.success.html`);
       } catch (err) {
         await transaction.rollback();
         throw err;
