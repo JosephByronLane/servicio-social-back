@@ -3,6 +3,7 @@ const { Op, Sequelize } = require('sequelize');
 const { sequelize, Owner, House, Service, Listing, Image } = require('../models');
 const path = require('path');
 const fs = require('fs-extra');
+const { verifyDeletionToken } = require('../services/token.service');
 //for UI simplicity we make a giant monolith function that adds a listing with all its associated data.
 const createListing = async (req, res) => {
     
@@ -257,35 +258,29 @@ const deleteListingByEmail = async (req, res) => {
       const decoded = verifyDeletionToken(token);
   
       const { listingId, email } = decoded;
-  
+        console.log("Listing ID: ", listingId);
       const listing = await Listing.findOne({
         where: { id: listingId },
-        include: [{ model: Image, as: 'images' }],
+        include: [{ model: House, as: 'house', include: [{ model: Owner, as: 'owner' }] }],
       });
   
       if (!listing) {
         return res.status(404).json({ message: 'Listing not found.' });
       }
-  
+      console.log("Found Listing");
       const ownerEmail = listing.house.owner.email; 
   
       if (email !== ownerEmail) {
         return res.status(403).json({ message: 'Unauthorized request.' });
       }
-  
+      console.log("Owner Email: ", ownerEmail);
       const transaction = await sequelize.transaction();
-  
+      console.log("Begin Transaction");
       try {
-        //remove images from storage and database
-        for (const image of listing.images) {
-          const filePath = path.resolve(image.imageUrl);
-          await fs.remove(filePath); // TODO: check if we need to also remove the files from storage, or only from db
-          await image.destroy({ transaction });
-        }
-  
         //remove listing
-        await listing.destroy({ transaction });
-  
+        await listing.destroy(            
+            { transaction });
+        console.log("Listing Removed");
         await transaction.commit();
   
         res.status(200).json({ message: 'Listing deleted successfully.' });

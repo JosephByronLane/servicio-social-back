@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const initMonthlyEmailScheduler = require('../utils/emailScheduler.utils.js');
 const scheduleCleanup  = require('../utils/cleanupTemp.utils.js');
 
 /**
@@ -77,6 +78,7 @@ const initializeDatabaseAndStartServer = async () => {
 
     //start the server
     scheduleCleanup();
+    initMonthlyEmailScheduler();
     /**
    * Listen on provided port, on all network interfaces.
    */

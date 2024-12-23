@@ -1,4 +1,3 @@
-// scheduler/cleanupTempUploads.js
 const cron = require('node-cron');
 const path = require('path');
 const fs = require('fs-extra');
