@@ -52,7 +52,7 @@ const sendMonthlyReminders = async () => {
         email: ownerEmail,
       });
 
-      const deletionUrl = `${process.env.FRONTEND_URL}/listing/delete??token=${token}`;
+      const deletionUrl = `${process.env.FRONTEND_URL}/delete/delete?token=${token}`;
 
       const subject = 'Tienes una casa en renta aun disponible.';
       const text = `blablablablablablablablalbabab`;
@@ -74,7 +74,7 @@ const sendMonthlyReminders = async () => {
 
 
 const initMonthlyEmailScheduler = () => {
-  cron.schedule('42 2 * * *', () => {
+  cron.schedule('55 5 * * *', () => {
     console.log('Running monthly email reminder task...');
     sendMonthlyReminders();
   });

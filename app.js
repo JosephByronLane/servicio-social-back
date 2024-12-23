@@ -11,7 +11,7 @@ var serviceRouter = require('./routes/service.routes');
 var listingRouter = require('./routes/listing.routes');
 var houseRouter = require('./routes/house.routes');
 var imageRouter = require('./routes/image.routes');
-
+var emailRouter = require('./routes/email.routes');
 var app = express();
 
 app.use(cors({
@@ -41,6 +41,8 @@ app.use('/service', serviceRouter);
 app.use('/listing', listingRouter);
 app.use('/house' , houseRouter);
 app.use('/image', imageRouter);
+app.use('/email', emailRouter);
+
 app.get('/', (req, res) => {
   res.render('index');
 });

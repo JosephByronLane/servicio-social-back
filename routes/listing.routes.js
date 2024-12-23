@@ -17,7 +17,7 @@ router.post('/', validateHouse('house.'), validateListing('listing.'), validateO
 router.get('/:id', validateId, validateResult, getListingById);
 router.get('/',validateSearch, validateResult ,searchListings);
 
-router.delete('/delete', deleteListingByEmail);
+router.get('/delete/delete', deleteListingByEmail);
 
 
 module.exports = router;
