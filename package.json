@@ -16,17 +16,22 @@
     "express": "^4.21.2",
     "express-validator": "^7.2.0",
     "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
     "http-errors": "~1.6.3",
     "jade": "^1.9.2",
+    "jsonwebtoken": "^9.0.2",
+    "juice": "^11.0.0",
     "mariadb": "^3.4.0",
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.16",
     "nodemon": "^3.1.9",
     "sequelize": "^6.37.5",
     "sqlite3": "^5.1.7",
     "u": "^0.1.0",
     "uid": "^2.0.2",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "xoauth2": "^1.2.0"
   }
 }

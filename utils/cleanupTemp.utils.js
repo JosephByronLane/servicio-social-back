@@ -1,4 +1,3 @@
-// scheduler/cleanupTempUploads.js
 const cron = require('node-cron');
 const path = require('path');
 const fs = require('fs-extra');
@@ -10,7 +9,7 @@ const tempDir = process.env.UPLOAD_TEMP_DIR || './assets/temp';
 
 const scheduleCleanup = () => {
   //job runs at midnight
-    cron.schedule('0 0 * * *', async () => {
+    cron.schedule('0 6 * * *', async () => {
       try {
         const now = new Date();
         const cutoff = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24 hours ago

@@ -17,12 +17,7 @@ router.post('/', validateHouse('house.'), validateListing('listing.'), validateO
 router.get('/:id', validateId, validateResult, getListingById);
 router.get('/',validateSearch, validateResult ,searchListings);
 
-router.delete('/:id', validateId, validateResult, deleteListingById);
-
-//TODO: make some sort of JWT for when email messages about the house being down.
-//FIXME: doesnt seem to work, it times out
-router.delete('/email/:email', validateEmail, validateResult, deleteListingByEmail);
-
+router.get('/delete/delete', deleteListingByEmail);
 
 
 module.exports = router;
