@@ -247,25 +247,60 @@ const deleteListingById = async (req, res) => {
 }
 
 const deleteListingByEmail = async (req, res) => {
-    const { email } = req.params;
-    
+    const { token } = req.query;
+    //TODO: move this into a validator
+    if (!token) {
+      return res.status(400).json({ message: 'Deletion token is required.' });
+    }
+  
     try {
-        const listings = await Listing.findAll({ where: { email } });
-    
-        if (!listings) {
-            console.log("No listing found");
-            return res.status(404).json({ message: 'Listing not found' });
+      const decoded = verifyDeletionToken(token);
+  
+      const { listingId, email } = decoded;
+  
+      const listing = await Listing.findOne({
+        where: { id: listingId },
+        include: [{ model: Image, as: 'images' }],
+      });
+  
+      if (!listing) {
+        return res.status(404).json({ message: 'Listing not found.' });
+      }
+  
+      const ownerEmail = listing.house.owner.email; 
+  
+      if (email !== ownerEmail) {
+        return res.status(403).json({ message: 'Unauthorized request.' });
+      }
+  
+      const transaction = await sequelize.transaction();
+  
+      try {
+        //remove images from storage and database
+        for (const image of listing.images) {
+          const filePath = path.resolve(image.imageUrl);
+          await fs.remove(filePath); // TODO: check if we need to also remove the files from storage, or only from db
+          await image.destroy({ transaction });
         }
-        console.log("Found listings")
-        listings.forEach(async listing => {
-            console.log("Deleting listing");
-            await listing.destroy();
-        });
-    
-        res.json({ message: 'Listings deleted successfully' });
+  
+        //remove listing
+        await listing.destroy({ transaction });
+  
+        await transaction.commit();
+  
+        res.status(200).json({ message: 'Listing deleted successfully.' });
+      } catch (err) {
+        await transaction.rollback();
+        throw err;
+      }
     } catch (error) {
-        console.error('Error deleting listing:', error);
-        res.status(500).json({ message: 'Server error' });
+      if (error.name === 'TokenExpiredError') {
+        return res.status(400).json({ message: 'Deletion token has expired.' });
+      } else if (error.name === 'JsonWebTokenError') {
+        return res.status(400).json({ message: 'Invalid deletion token.' });
+      }
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred during deletion.' });
     }
 }
 
