@@ -49,6 +49,7 @@ jobs:
         echo "JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}" >> .env
         echo "#url" >> .env
         echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+        echo "DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest" >> .env
 
     - name: Copy docker-compose.yml to AWS Lightsail
       uses: appleboy/scp-action@v0.1.1
@@ -56,22 +57,19 @@ jobs:
         host: ${{ secrets.LIGHTSAIL_SSH_HOST }}
         username: ${{ secrets.LIGHTSAIL_SSH_USER }}
         key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-        source: "docker-compose.yml"
-        target: "/home/${{ secrets.LIGHTSAIL_SSH_USER }}/app/docker-compose.yml"
+        source: |
+            docker-compose.prod.yml
+            .env
+        target: /home/${{ secrets.LIGHTSAIL_SSH_USER }}/app/
 
     - name: Deploy to AWS Lightsail
-      env:
-        SSH_KEY: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-        SSH_USER: ${{ secrets.LIGHTSAIL_SSH_USER }}
-        SSH_HOST: ${{ secrets.LIGHTSAIL_SSH_HOST }}
-      run: |
-        mkdir -p ~/.ssh
-        echo "$SSH_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $SSH_USER@$SSH_HOST << 'EOF'
-        mkdir -p /home/$SSH_USER/app/
-        cd /home/$SSH_USER/app/
-        docker-compose down
-        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
-        docker-compose up -d
-        EOF
+      uses: appleboy/ssh-action@v0.1.1
+      with:
+          host: ${{ secrets.LIGHTSAIL_SSH_HOST }}
+          username: ${{ secrets.LIGHTSAIL_SSH_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.LIGHTSAIL_SSH_USER }}/app/
+            docker-compose -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml up -d

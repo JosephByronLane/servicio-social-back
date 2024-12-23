@@ -1,40 +1,28 @@
+version: '3.8'
+
 services:
-#express API
   express:
-    build: .
+    image: ${DOCKER_IMAGE}
     container_name: express_container
     ports:
-      - "3000:3000"
-
-    #mount the current directory to the container
-    volumes:
-      - .:/usr/src/app
-
-    #start the express app with nodemon (dev)
+      - "80:3000"
     command: npm run pm2dev
-    #wait for mariadb to launch before starting the Express.js app
     depends_on:
       - mariadb
     environment:
-    #variables vound in .env file
       DB_HOST: mariadb
       DB_USER: ${DB_USER}         
       DB_PASS: ${DB_PASSWORD}    
       DB_NAME: ${DB_NAME}
 
-
-#mardib database
   mariadb:
     image: mariadb:latest
     container_name: mariadb_container
     ports:
       - "3306:3306"
     environment:
-    #variables vound in .env file
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-
-    #to prevent data loss if container is restarted we use a dedicated volume
     volumes:
       - mariadb_data:/var/lib/mysql
 
