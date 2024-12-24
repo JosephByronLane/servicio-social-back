@@ -6,7 +6,7 @@ This API provides endpoints to manage listings, houses, owners, and related data
 
 ## Table of Contents
 
-- [Recommended usage](#recommended-usage)
+- [Recommended usage](recommended-usage.md)
 - [Base URL](#base-url)
 - [Endpoints](#endpoints)
   - [Create Listing (POST /)](#create-listing-post-)
