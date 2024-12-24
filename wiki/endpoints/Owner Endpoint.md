@@ -39,7 +39,7 @@ Creates a new owner.
 	"createdAt": "2024-12-24T01:51:56.383Z"
 }
 ```
-
+---
 ### Get all owners
 
 **Method**: `GET`  
@@ -74,7 +74,7 @@ Retrieves all owners in the database.
 	}
 ]
 ```
-
+---
 ### Get owner by Id
 
 **Method**: `GET`  
@@ -97,7 +97,7 @@ Retrieves an owner based on the ID.
 	"deletedAt": null
 }
 ```
-
+---
 ### Get owner by email
 
 **Method**: `GET`  
@@ -123,6 +123,7 @@ Retrieves an owner based on the enail.
 }
 ```
 
+---
 
 ### Delete owner by id
 

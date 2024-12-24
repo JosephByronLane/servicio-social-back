@@ -35,13 +35,13 @@ module.exports = (sequelize) => {
 
   Listing.afterDestroy(async (listing, options) => {
     try {
-      // Fetch images within the same transaction
+      // fetch images within the same transaction
       const images = await listing.getImages({ transaction: options.transaction });
       for (const image of images) {
         await image.destroy({ transaction: options.transaction });
       }
 
-      // Fetch and destroy the associated house within the same transaction
+      // fetch and destroy the associated house within the same transaction
       const house = await listing.getHouse({ transaction: options.transaction });
       if (house) {
         await house.destroy({ transaction: options.transaction });
@@ -50,7 +50,6 @@ module.exports = (sequelize) => {
       console.log(`afterDestroy hook: Successfully deleted images and house for listing ID ${listing.id}`);
     } catch (error) {
       console.error(`afterDestroy hook error for listing ID ${listing.id}:`, error);
-      // Optionally, re-throw the error to let Sequelize handle it
       throw error;
     }
   });

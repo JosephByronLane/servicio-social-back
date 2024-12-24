@@ -45,6 +45,9 @@ Creates a new listing along with its related data (owner, house, services, image
   }
 }
 ```
+
+---
+
 #### Return Body
 **Status**: `201`  
 ```json
@@ -113,6 +116,8 @@ Creates a new listing along with its related data (owner, house, services, image
 	]
 }
 ```
+---
+
 ### Get all listings
 
 **Method**: `GET`  
@@ -166,70 +171,90 @@ Retrieves all listings in the database.
 	]
 }
 ```
-
+---
 ### Get listing by ID
 
 **Method**: `GET`  
 **URL**: `/listing/:id`
 
 Retrieves a single listing in the database based on the provided ID
-**NOTE:** this returns an ownerId, you will need to query that separately.
 
 #### Return Body
 **Status**: `200`  
 
 ```json
 {
-	"data": [
+	"id": 20,
+	"houseId": 20,
+	"title": "puto el que lo lea",
+	"description": "me quiero suicidar.",
+	"createdAt": "2024-12-24T01:27:12.000Z",
+	"updatedAt": "2024-12-24T01:27:12.000Z",
+	"deletedAt": null,
+	"house": {
+		"id": 20,
+		"ownerId": 11,
+		"type": "Cuarto",
+		"isLookingForRoommate": true,
+		"isOnlyWomen": false,
+		"price": 1100,
+		"street": "123 Main St",
+		"postalCode": "12345",
+		"crossings": "53/32",
+		"colony": "Cholul",
+		"createdAt": "2024-12-24T01:27:12.000Z",
+		"updatedAt": "2024-12-24T01:27:12.000Z",
+		"deletedAt": null,
+		"owner": {
+			"id": 11,
+			"firstName": "don pollo",
+			"lastName": "y su polla",
+			"email": "24197141@modelo.edu.mx",
+			"telephone": "123-456-7890"
+		},
+		"services": [
+			{
+				"id": 1,
+				"name": "water",
+				"createdAt": "2024-12-22T03:22:54.000Z",
+				"updatedAt": "2024-12-22T03:22:54.000Z",
+				"deletedAt": null
+			}
+		]
+	},
+	"images": [
 		{
-			"id": 20,
-			"houseId": 20,
-			"title": "puto el que lo lea",
-			"description": "me quiero suicidar.",
-			"createdAt": "2024-12-24T01:27:12.000Z",
+			"id": 35,
+			"listingId": 20,
+			"tempId": null,
+			"imageUrl": "assets/listings/20/images-1735003624332-23706039.jpg",
+			"createdAt": "2024-12-24T01:27:04.000Z",
 			"updatedAt": "2024-12-24T01:27:12.000Z",
-			"deletedAt": null,
-			"house": {
-				"id": 20,
-				"ownerId": 11,
-				"type": "Cuarto",
-				"isLookingForRoommate": true,
-				"isOnlyWomen": false,
-				"price": 1100,
-				"street": "123 Main St",
-				"postalCode": "12345",
-				"crossings": "53/32",
-				"colony": "Cholul",
-				"createdAt": "2024-12-24T01:27:12.000Z",
-				"updatedAt": "2024-12-24T01:27:12.000Z",
-				"deletedAt": null,
-				"services": [
-					{
-						"id": 1,
-						"name": "water"
-					}
-				]
-			},
-			"images": [
-				{
-					"id": 35,
-					"imageUrl": "assets/listings/20/images-1735003624332-23706039.jpg"
-				},
-				{
-					"id": 36,
-					"imageUrl": "assets/listings/20/images-1735003626533-668491817.jpg"
-				},
-				{
-					"id": 37,
-					"imageUrl": "assets/listings/20/images-1735003628966-893522118.jpg"
-				}
-			]
+			"deletedAt": null
+		},
+		{
+			"id": 36,
+			"listingId": 20,
+			"tempId": null,
+			"imageUrl": "assets/listings/20/images-1735003626533-668491817.jpg",
+			"createdAt": "2024-12-24T01:27:06.000Z",
+			"updatedAt": "2024-12-24T01:27:12.000Z",
+			"deletedAt": null
+		},
+		{
+			"id": 37,
+			"listingId": 20,
+			"tempId": null,
+			"imageUrl": "assets/listings/20/images-1735003628966-893522118.jpg",
+			"createdAt": "2024-12-24T01:27:08.000Z",
+			"updatedAt": "2024-12-24T01:27:12.000Z",
+			"deletedAt": null
 		}
 	]
 }
 ```
 
-
+---
 ### Search listings
 
 **Method**: `GET`  
@@ -309,7 +334,7 @@ For example, a query would look like `localhost:3000/listing?type=Cuarto&title=p
 
 
 
-
+---
 
 ### Delete listing by ID
 
