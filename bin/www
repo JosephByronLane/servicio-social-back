@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
+const initMonthlyEmailScheduler = require('../utils/emailScheduler.utils.js');
+const scheduleCleanup  = require('../utils/cleanupTemp.utils.js');
+
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
 var debug = require('debug')('servicio-social-back:server');
 var http = require('http');
+const { sequelize, Service } = require('../models'); // Adjust the path if necessary
 
 /**
  * Get port from environment and store in Express.
@@ -20,14 +23,88 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var sync = false; //set to true to sync the database
 
-/**
- * Listen on provided port, on all network interfaces.
- */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+const startServer = (host) => {
+  server.listen(port, host);
+  server.on('error', onError);
+  server.on('listening', () => onListening(host));
+};
+
+//database connection and initialization script
+const initializeDatabaseAndStartServer = async () => {
+  try {
+    
+    //check if cooection to DB is ok, we aren't actually authenticating anything, its just an ACK
+    try {
+      await sequelize.authenticate();
+      console.log('Connection to the MariaDB database has been established successfully.');
+    } catch (error) {
+      console.error('Unable to connect to the database:', error);
+    }
+
+    if(sync) {
+    // we sync (create) all needed database tables automatically (god bless automation)
+      await sequelize.sync({
+        force: true
+     }); //to do hard reset and drop all tables set force to true
+     console.log('All models were synchronized successfully.');
+
+    }
+
+
+
+    // initial services for service table, THIS IS NEEDED, WE NEED TO SEED THE DATABASE ELSE EVERYTHING BREAKS
+    const services = [
+      'water',
+      'electricity',
+      'internet',
+      'furnishings',
+      'parking',
+      'garbage collection',
+      'pet friendly',
+      'cleaning service',
+      'washing service',
+      'communal areas',
+      'food',
+    ];
+
+    if(sync) {
+      for (const serviceName of services) {
+        await Service.findOrCreate({
+          where: { name: serviceName },
+        });
+      }
+      console.log('Services have been seeded.');
+
+    }
+    //FIXME: this rawdogs and adds everything to the database wether its there or not, 
+  
+
+
+
+    //start the server
+    scheduleCleanup();
+    initMonthlyEmailScheduler();
+    /**
+   * Listen on provided port, on all network interfaces.
+   */
+
+    // Start server on both IPv4 and IPv6
+    startServer('0.0.0.0'); // IPv4
+    startServer('::');       // IPv6
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+    process.exit(1); // Exit the process with failure
+  }
+};
+
+initializeDatabaseAndStartServer();
+
+
+
+
 
 /**
  * Normalize a port into a number, string, or false.
