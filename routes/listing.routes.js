@@ -19,5 +19,5 @@ router.get('/',validateSearch, validateResult ,searchListings);
 
 router.get('/delete/delete', deleteListingByEmail);
 
-
+router.delete('/:id', validateId, validateResult, deleteListingById);
 module.exports = router;

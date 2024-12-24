@@ -148,10 +148,9 @@ const createListing = async (req, res) => {
   } catch (error) {
     //if anything goes wrong, we rollback the transaction
     await transaction.rollback();
-    console.error(error);
+    console.error(`Error while creating listing: ${error}`);
     res.status(500).json({
-      message: 'An error occurred while creating the listing.',
-      error: error.message,
+      message: 'Internal server error.'
     });
   }
 };
@@ -192,8 +191,9 @@ const getListingById = async (req, res) => {
       res.json(listing);
     } catch (error) {
       console.error('Error fetching listing:', error);
-      res.status(500).json({ message: 'Server error' });
-    }
+      res.status(500).json({
+        message: 'Internal server error.'
+      });    }
   };
 
 const getListings = async (req, res) => {
@@ -226,8 +226,9 @@ const getListings = async (req, res) => {
     res.json(listings);
   } catch (error) {
     console.error('Error fetching listings:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 }
 
 const deleteListingById = async (req, res) => {
@@ -244,9 +245,10 @@ const deleteListingById = async (req, res) => {
     
         res.json({ message: 'Listing deleted successfully' });
     } catch (error) {
-        console.error('Error deleting listing:', error);
-        res.status(500).json({ message: 'Server error' });
-    }
+        console.error('Error deleting listing by id:', error);
+        res.status(500).json({
+          message: 'Internal server error.'
+        });    }
 }
 
 const deleteListingByEmail = async (req, res) => {
@@ -295,9 +297,10 @@ const deleteListingByEmail = async (req, res) => {
       } else if (error.name === 'JsonWebTokenError') {
         return res.status(400).json({ message: 'Invalid deletion token.' });
       }
-      console.error(error);
-      res.status(500).json({ message: 'An error occurred during deletion.' });
-    }
+      console.error('Error deleting listing by email:', error);
+      res.status(500).json({
+        message: 'Internal server error.'
+      });    }
 }
 
 const searchListingByTitle = async (req, res) => {
@@ -315,8 +318,9 @@ const searchListingByTitle = async (req, res) => {
         res.json(listings);
     } catch (error) {
         console.error('Error searching listing:', error);
-        res.status(500).json({ message: 'Server error' });
-    }
+        res.status(500).json({
+          message: 'Internal server error.'
+        });    }
 }
 
 const searchListings = async (req, res) => {
@@ -501,6 +505,7 @@ const searchListings = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
       }
   };
+
 
 module.exports = {
     createListing,

@@ -10,10 +10,12 @@ const { Owner } = require('../models');
 
 
 router.post('/', validateOwner(''), validateResult,createOwner);
+
+router.get('/email/:email', validateEmail(''), validateResult ,getOwnerByEmail);
+
 router.get('/', getOwners);
 
 router.get('/:id', validateId, validateResult , getOwnerById);
-router.get('/email/:email', validateEmail, validateResult ,getOwnerByEmail);
 
 router.delete('/:id', validateId,validateResult , deleteOwner);
 

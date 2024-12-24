@@ -11,8 +11,9 @@ const createOwner = async (req, res) => {
   } catch (error) {
     console.error('Error creating owner:', error);
 
-    res.status(500).json({ message: 'Failed to create owner', error: error.message });
-  }
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 };
 
 const getOwners = async (req, res) => {
@@ -20,9 +21,10 @@ const getOwners = async (req, res) => {
     const owners = await Owner.findAll();
     res.status(200).json(owners);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to retrieve owners', error: error.message });
-  }
+    console.error('Error retrieving owners:' ,error);
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 };
 
 const getOwnerById = async (req, res) => {
@@ -36,20 +38,11 @@ const getOwnerById = async (req, res) => {
     }
   }catch(error){
     console.error(error);
-    res.status(500).json({message: 'Failed to retrieve owner', error: error.message});
+    res.status(500).json({message: 'Failed to retrieve owner by id', error: error.message});
   }
 };
 
 const getOwnerByEmail = async (req, res) => {
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ 
-      message: 'Validation failed', 
-      errors: errors.array() 
-    });
-  }
-
   try{
     console.log("------------------ Owner by email ------------------");
     console.log(req.params.email);
@@ -62,9 +55,10 @@ const getOwnerByEmail = async (req, res) => {
       res.status(404).json({message: 'Owner not found by email'});
     }
   }catch(error){
-    console.error(error);
-    res.status(500).json({message: 'Failed to retrieve owner', error: error.message});
-  }
+    console.error('Error retrieving owner by email:', error);
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 };
 
 //this endpoint shouldn't be needed, but ill add it just incase
@@ -83,9 +77,10 @@ const deleteOwner = async (req, res) => {
     res.status(200).json({message: 'Owner deleted'});
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to delete owner', error: error.message });
-  }
+    console.error('Error deleting owner by id', error);
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 };
 
 module.exports = {

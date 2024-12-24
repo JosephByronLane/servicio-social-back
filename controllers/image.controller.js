@@ -20,8 +20,9 @@ const initiateUpload = async (req, res) => {
     res.status(200).json({ tempId });
   } catch (error) {
     console.error('Error initiating upload:', error);
-    res.status(500).json({ message: 'Failed to initiate upload session.' });
-  }
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 };
 
 
@@ -56,8 +57,9 @@ const uploadImages = async (req, res) => {
     res.status(200).json({ images: imageRecords });
   } catch (error) {
     console.error('Error uploading images:', error);
-    res.status(500).json({ message: 'Failed to upload images.' });
-  }
+    res.status(500).json({
+      message: 'Internal server error.'
+    });  }
 };
 
 module.exports = {

@@ -71,7 +71,7 @@ const createHouse = async (req, res) => {
 
     console.error(error);
     await transaction.rollback();
-    res.status(500).json({ message: 'Failed to create house', error: error.message });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -86,7 +86,7 @@ const getHouses = async (req, res) => {
     res.json(houses);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Failed to retrieve houses', error: error.message });
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -101,7 +101,7 @@ const deleteHouseById = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to delete house', error: error.message });
+        res.status(500).json({ message: 'Internal server error' });
     }
 }
 
@@ -109,29 +109,35 @@ const getHousesByOwnerEmail = async (req, res) => {
     try {
         const owner = await Owner.findOne({ where: { email: req.params.email } });
         if (owner) {
-        const houses = await House.findAll({ where: { ownerId: owner.id } });
+        const houses = await House.findAll({ 
+            where: { ownerId: owner.id },
+            include: [{ model: Owner, as: 'owner' }]
+        });
         res.json(houses);
         } else {
         res.status(404).json({ message: 'Owner not found by email' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to retrieve houses', error: error.message });
+        res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 const getHousesByOwnerId = async (req, res) => {   
     try {
-        const ownerId = await Owner.findOne({ where: { email: req.params.id } });
+        const owner = await Owner.findOne({ where: { id: req.params.id } });
         if (owner) {
-        const houses = await House.findAll({ where: { ownerId: ownerId } });
-        res.json(houses);
-        } else {
-        res.status(404).json({ message: 'Owner not found by email' });
+          const houses = await House.findAll({ 
+            where: { ownerId: owner.id },
+            include: [{ model: Owner, as: 'owner' }]
+            });
+          res.json(houses);
+          } else {
+          res.status(404).json({ message: 'Owner not found by Id' });
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to retrieve houses', error: error.message });
+        res.status(500).json({ message: 'Internal server error' });
     }
 }
 
@@ -145,7 +151,7 @@ const getHouseById = async (req, res) => {
         }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to retrieve house', error: error.message });
+        res.status(500).json({ message: 'Internal server error' });
     }
 }
 
