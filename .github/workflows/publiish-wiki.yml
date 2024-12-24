@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - adding-docs
-      - dev
+      - main
     paths:
       - wiki/**
       - .github/workflows/publish-wiki.yml
