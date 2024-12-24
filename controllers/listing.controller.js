@@ -502,6 +502,7 @@ const searchListings = async (req, res) => {
       }
   };
 
+
 module.exports = {
     createListing,
     getListingById,

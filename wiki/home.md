@@ -4,7 +4,7 @@ This API provides endpoints to manage listings, houses, owners, and related data
 
 ---
 
-## Table of Contents
+## Pages in wiki
 
 - [Recommended usage](recommended-usage.md)
 - [Base URL](#base-url)

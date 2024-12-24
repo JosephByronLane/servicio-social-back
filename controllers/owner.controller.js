@@ -41,15 +41,6 @@ const getOwnerById = async (req, res) => {
 };
 
 const getOwnerByEmail = async (req, res) => {
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ 
-      message: 'Validation failed', 
-      errors: errors.array() 
-    });
-  }
-
   try{
     console.log("------------------ Owner by email ------------------");
     console.log(req.params.email);
