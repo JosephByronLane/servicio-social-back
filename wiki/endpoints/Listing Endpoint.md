@@ -360,7 +360,7 @@ This endpoint is only if you fuck up and want to delete the record.
 ### Delete listing by token
 
 **Method**: `DELETE`  
-**URL**: `/listing/:token`
+**URL**: `/listing/delete/delete?token=:token`
 
 Deletes a listing on the database given by the provided token.
 
