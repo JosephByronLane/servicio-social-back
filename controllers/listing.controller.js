@@ -181,7 +181,7 @@ const createListing = async (req, res) => {
     const replacements = {
       ownerName: owner.firstName,
       listingTitle: createdListing.title, 
-      listingId: createdListing.id,
+      listingId: token,
       deletionUrl,
 
     };
