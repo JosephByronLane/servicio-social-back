@@ -23,7 +23,7 @@ const sendMonthlyReminders = async () => {
     const listings = await Listing.findAll({
       where: {
         createdAt: {
-          [Op.lt]: oneWeekAgo,
+          [Op.lt]: oneMonthAgo,
         },
       },
       include: [
