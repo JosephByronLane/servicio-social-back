@@ -264,7 +264,7 @@ Searches the database for all parameters that meet the requirements
 
 #### Query Parameters
 
-- `services`: Array of service names/IDs.
+- `services`: Array of service names.
 - `type`: Type of the house (e.g., "Cuarto", "Casa", "Departamento").
 - `isLookingForRoommate`: Boolean (true or false).
 - `isOnlyWomen`: Boolean (true or false).

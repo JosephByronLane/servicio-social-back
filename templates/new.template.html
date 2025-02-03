@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recordatorio sobre casa en renta</title>
+  <style>
+       /*
+      ALL THIS WILL BE COMPILED INTO INLINE CSS
+    */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    .blue-text {
+      color: #061f57;
+    }
+
+    .root {
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      max-width: 80%;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .root h1 {
+      text-align: start;
+      margin: 20px 0 10px 0;
+      font-weight: bold;
+      font-size: 2rem;
+      color: #061f57;
+    }
+
+    .root p {
+      text-align: start;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      color: #333333;
+    }
+
+    .center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Navbar */
+    .rootNavbar {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: #061f57;
+      padding: 10px 0;
+    }
+
+    .logo {
+      padding: 10px;
+      max-height: 100px;
+      display: block;
+      margin: auto;
+    }
+
+    /* Button */
+    .action-button {
+      border: none;
+      margin: 15px;
+      background-color: #29abe2;
+      color: white;
+      width: 250px;
+      height: 50px;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 1.25rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-button:hover {
+      background-color: #1a8cb5;
+    }
+  </style>
+</head>
+<body>
+  <nav class="rootNavbar">
+    <img src="cid:logo_cid" alt="logo" class="logo">
+  </nav>
+  <div class="root">
+    <h1 class="blue-text">¡Gracias por crear un listado!</h1>
+    <p>Hola, {{ownerName}}!</p>
+    <p>Listado "{{listingTitle}}" ha sido creado exitosamente.</p>
+    <p>La ID del listado es: {{listingId}}. No compartas esta ID con nadie.</p>
+    <p>Usaras esa ID para eliminar el listado en cualquier momento desde la pagina de inicio.</p>
+    <p>O puedes usar el boton de abajo para eliminar el listado.</p>
+
+    <div class="center">
+      <a href="{{deletionUrl}}" class="action-button">Eliminar listado</a>
+    </div>
+  </div>
+</body>
+</html>

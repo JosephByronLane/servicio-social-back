@@ -4,7 +4,12 @@ const { sequelize, Owner, House, Service, Listing, Image } = require('../models'
 const path = require('path');
 const fs = require('fs-extra');
 const { verifyDeletionToken } = require('../services/token.service');
+const { sendEmail } = require('../services/email.service');
+const { generateDeletionToken } = require('../services/token.service');
+
+
 //for UI simplicity we make a giant monolith function that adds a listing with all its associated data.
+
 const createListing = async (req, res) => {
     
   const {
@@ -27,9 +32,8 @@ const createListing = async (req, res) => {
   }
   
 
-
   const transaction = await sequelize.transaction();
-
+  let createdListing;
   try {
 
     //since we might be trying to use a deleted user, we need to use paranoid: false
@@ -101,7 +105,6 @@ const createListing = async (req, res) => {
         const oldPath = path.resolve(image.imageUrl);
         const newDir = path.join(permanentDir, `${listingId}`);
         const newPath = path.join(newDir, path.basename(image.imageUrl));
-
         
         await fs.ensureDir(newDir);
         
@@ -125,7 +128,7 @@ const createListing = async (req, res) => {
 
     await transaction.commit();
 
-    const createdListing = await Listing.findOne({
+    createdListing = await Listing.findOne({
       where: { id: listingInstance.id },
       include: [
         {
@@ -140,6 +143,8 @@ const createListing = async (req, res) => {
       ],
     });
 
+    console.log("Listing created, sending email");
+    
     res.status(201).json({
       message: 'Listing created successfully.',
       data: createdListing,
@@ -152,6 +157,50 @@ const createListing = async (req, res) => {
     res.status(500).json({
       message: 'Internal server error.'
     });
+  }
+
+  try{
+    //after  creating a listing we send an email to the owner with the listing id
+    const ownerEmail = owner.email;
+
+    const token = generateDeletionToken({
+      listingId: createdListing.id,
+      email: ownerEmail,
+    });
+
+    console.log("Token: ", token);
+
+    console.log("Owner Email: ", ownerEmail);
+
+    const deletionUrl = `${process.env.FRONTEND_URL}/listing/delete/delete?token=${token}`;
+
+    const templatePath = path.join(__dirname, '..', 'templates', 'new.template.html');
+    const logoPath = path.join(__dirname, '..', 'templates', 'logo-universidad-modelo.png');
+
+    const subject = '¡Gracias por crear un listado!';
+    const replacements = {
+      ownerName: owner.firstName,
+      listingTitle: createdListing.title, 
+      listingId: createdListing.id,
+      deletionUrl,
+
+    };
+
+
+    const attachments = [
+      {
+        filename: 'logo-universidad-modelo.png',
+        path: logoPath,
+        cid: 'logo_cid', 
+      },
+    ];
+
+    // Send the email
+    await sendEmail(ownerEmail, subject, templatePath, replacements, attachments);
+
+  }
+  catch(error){
+    console.error('Error sending email:', error);
   }
 };
 
