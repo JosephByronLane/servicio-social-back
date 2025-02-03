@@ -92,8 +92,8 @@ out
 dist
 
 # image uploads
-.assets/listings/*
-.assets/temp/*
+assets/listings
+assets/temp
 
 # Gatsby files
 .cache/
