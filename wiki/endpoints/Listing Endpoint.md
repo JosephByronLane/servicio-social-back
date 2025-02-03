@@ -333,7 +333,7 @@ For example, a query would look like `localhost:3000/listing?type=Cuarto&title=p
 ```
 
 
-
+<!-- 
 ---
 
 ### Delete listing by ID
@@ -352,4 +352,20 @@ This endpoint is only if you fuck up and want to delete the record.
 {
 	"message": "Listing deleted successfully"
 }
-```
+``` -->
+
+
+---
+
+### Delete listing by token
+
+**Method**: `DELETE`  
+**URL**: `/listing/:token`
+
+Deletes a listing on the database given by the provided token.
+
+**NOTE:** This endpoint should only be called when the user manually wants to delete their listing (wether it be by email or manually accessing the site from the `pagina-de-inicio` at the bottom).
+The token is given to the user so they can delete it, or its automatically inserted into the url when the user presses the button to delete the  listing (which is found on the sent emails).
+
+#### Return Body
+so it doesn't really return anything, it just redirects the user to a success or error page depending if the listing was succesfully deleted or not.
