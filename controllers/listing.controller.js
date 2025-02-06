@@ -504,6 +504,7 @@ const searchListings = async (req, res) => {
           const limit = parseInt(pageSize, 10) > 0 ? parseInt(pageSize, 10) : 10;
           const offset = (parseInt(page, 10) - 1) * limit;
           paginationOptions = { limit, offset };
+          queryOptions.subQuery = false;
         }
     
         // merge
