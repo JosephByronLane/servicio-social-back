@@ -1,28 +1,32 @@
 const { query, validationResult } = require('express-validator');
-
+const { Service } = require('../models');
 const validateSearch = [
   query('services')
     .optional()
+
     .customSanitizer((value) => {
       if (typeof value === 'string') {
+        console.log("returning value", value.split(',').map((service) => service.trim()));
         return value.split(',').map((service) => service.trim());
       }
       return value;
     })
     .isArray({ min: 1 })
     .withMessage('Services must be an array of strings.')
-    .custom(async (service) => {     
-        const existingService = await Service.findOne({
-          where: {
-            name: service,
-          },
-        });
-        if (!existingService) {
-          throw new Error(`Service does not exist: ${service}.`);
-        }
-        return true;
-        
-      }),
+    .custom(async (services) => {     
+      if (!Array.isArray(services)) {
+          throw new Error('Services must be an array.');
+      }  
+      for (const service of services) {
+          const existingService = await Service.findOne({
+              where: { name: service },
+          });
+          if (!existingService) {
+              throw new Error(`Service does not exist: ${service}.`);
+          }
+      }
+      return true;
+  }),
   
   query('services.*')
     .isString()
