@@ -107,7 +107,7 @@ jobs:
         echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
         echo "DOCKER_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest" >> .env
         ls -la
-        docker-compose -f docker-compose.prod.yml down
-        docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
-        docker-compose -f docker-compose.prod.yml up -d
+        sudo docker-compose -f docker-compose.prod.yml down
+        sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
+        sudo docker-compose -f docker-compose.prod.yml up -d
         EOF
