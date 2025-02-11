@@ -16,7 +16,9 @@ services:
       DB_USER: ${DB_USER}         
       DB_PASS: ${DB_PASSWORD}    
       DB_NAME: ${DB_NAME}
-
+      #mounting volume to not lose assets when container is restarted/updated
+    volumes:
+      - assets_data:/usr/src/app/assets
   mariadb:
     image: mariadb:latest
     container_name: mariadb_container
@@ -30,3 +32,4 @@ services:
 
 volumes:
   mariadb_data:
+  assets_data:
