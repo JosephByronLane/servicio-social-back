@@ -23,7 +23,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var sync = false; //set to true to sync the database
+var sync = true; //set to true to sync the database
 
 
 const startServer = (host) => {
