@@ -32,3 +32,4 @@ services:
 
 volumes:
   mariadb_data:
+  assets_data:
