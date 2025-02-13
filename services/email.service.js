@@ -7,16 +7,14 @@ const path = require('path');
 require('dotenv').config();
 
 var transporter = nodemailer.createTransport({
-    host: 'smtp.office365.com',
-    port: 587,     
-    secure: false, 
+    service: "Gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, 
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     },
-    tls: {
-        rejectUnauthorized: false 
-    }
 });
 
 //compiles html template for mail

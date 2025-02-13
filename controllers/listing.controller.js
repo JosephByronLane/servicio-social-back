@@ -317,9 +317,13 @@ const deleteListingByEmail = async (req, res) => {
       });
   
       if (!listing) {
-        res.redirect(`${process.env.FRONTEND_URL}/deletion.error.html`);
+        return res.redirect(`${process.env.FRONTEND_URL}/deletion.error.html`);
       }
       console.log("Found Listing");
+
+      if (!listing.house || !listing.house.owner) {
+        return res.status(400).json({ error: "Listing does not have an associated house or owner" });
+     }
       const ownerEmail = listing.house.owner.email; 
   
       if (email !== ownerEmail) {
@@ -335,12 +339,13 @@ const deleteListingByEmail = async (req, res) => {
         console.log("Listing Removed");
         await transaction.commit();
   
-        res.redirect(`${process.env.FRONTEND_URL}/deletion.success.html`);
+        return res.redirect(`${process.env.FRONTEND_URL}/deletion.success.html`);
       } catch (err) {
         await transaction.rollback();
         throw err;
       }
-    } catch (error) {
+    } 
+    catch (error) {
       if (error.name === 'TokenExpiredError') {
         return res.status(400).json({ message: 'Deletion token has expired.' });
       } else if (error.name === 'JsonWebTokenError') {
@@ -349,7 +354,8 @@ const deleteListingByEmail = async (req, res) => {
       console.error('Error deleting listing by email:', error);
       res.status(500).json({
         message: 'Internal server error.'
-      });    }
+      });   
+     }
 }
 
 const searchListingByTitle = async (req, res) => {
