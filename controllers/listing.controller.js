@@ -317,7 +317,7 @@ const deleteListingByEmail = async (req, res) => {
       });
   
       if (!listing) {
-        return res.redirect(`${process.env.FRONTEND_URL}/deletion.error.html`);
+        return res.status(404).json({ message: 'Listing not found', redirectTo: `${process.env.FRONTEND_URL}/deletion.error.html` });
       }
       console.log("Found Listing");
 
@@ -339,7 +339,7 @@ const deleteListingByEmail = async (req, res) => {
         console.log("Listing Removed");
         await transaction.commit();
   
-        return res.redirect(`${process.env.FRONTEND_URL}/deletion.success.html`);
+        return res.status(200).json({ message: 'Listing deleted successfully', redirectTo: `${process.env.FRONTEND_URL}/deletion.success.html` });
       } catch (err) {
         await transaction.rollback();
         throw err;

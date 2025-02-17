@@ -368,4 +368,25 @@ Deletes a listing on the database given by the provided token.
 The token is given to the user so they can delete it, or its automatically inserted into the url when the user presses the button to delete the  listing (which is found on the sent emails).
 
 #### Return Body
-so it doesn't really return anything, it just redirects the user to a success or error page depending if the listing was succesfully deleted or not.
+
+If listing was deleted succesfully:
+**Status**: `200`  
+
+```json
+{
+	"message": "Listing deleted successfully",
+	"redirectTo": "url-to-redirect-to"
+}
+```
+The URL to redirect to is [servicio.runefx.org/deletion.success.html](http://servicio.runefx.org/deletion.success.html)
+
+If listing never existed/was already deleted:
+**Status**: `404`  
+
+```json
+{
+	"message": "Listing not found",
+	"redirectTo": "url-to-redirect-to"
+}
+```
+The URL to redirect to is: [http://servicio.runefx.org/deletion.error.html](http://servicio.runefx.org/deletion.success.html)
