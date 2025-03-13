@@ -8,6 +8,7 @@ require('dotenv').config();
 const tempDir = process.env.UPLOAD_TEMP_DIR || './assets/temp';
 
 const scheduleCleanup = () => {
+  
   //job runs at midnight
     cron.schedule('0 6 * * *', async () => {
       try {
